@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-
+using System.Threading;
 namespace TestFileinfoInDirectory
 {
     public partial class Form1 : Form
@@ -15,6 +15,7 @@ namespace TestFileinfoInDirectory
         delegate void mydele(string path);
         event mydele testeventhandler;
         private Object lockThis = new object();
+        static int milliseconds = 500;
 
         string sourceDirPath;
         string desDirPath;
@@ -29,8 +30,9 @@ namespace TestFileinfoInDirectory
         {
             FileSystemWatcher watcher = new FileSystemWatcher();
             watcher.IncludeSubdirectories = true;
-            //watcher.Path = @"C:\Users\Public\sourceDir\";
-            watcher.Path = @sourceDirPath;
+            watcher.Path = @"D:\sourceDir";
+            
+            //watcher.Path = @sourceDirPath;
             watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Attributes | NotifyFilters.CreationTime | NotifyFilters.LastAccess | NotifyFilters.Size;
             watcher.Filter = "";
             watcher.Created += new FileSystemEventHandler(Created);
@@ -40,43 +42,33 @@ namespace TestFileinfoInDirectory
             watcher.EnableRaisingEvents = true;
 
             testeventhandler += new mydele(Form1_testeventhandler);
-            lock (lockThis)
-            {
-                DirectoryCopy(@sourceDirPath, @desDirPath, true);
-            }
+
+            DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
 
         void Deleted(object sender, FileSystemEventArgs e)
         {
             MakeMessage(e.FullPath, "삭제");
-            lock (lockThis)
-            {
-                DirectoryCopy(@sourceDirPath, @desDirPath, true);
-            }
+            Thread.Sleep(milliseconds);
+            DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
         void Created(object sender, FileSystemEventArgs e)
         {
             MakeMessage(e.FullPath, "생성");
-            lock (lockThis)
-            {
-                DirectoryCopy(@sourceDirPath, @desDirPath, true);
-            }
+            Thread.Sleep(milliseconds);
+            DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
         void Changed(object sender, FileSystemEventArgs e)
         {
             MakeMessage(e.FullPath, "변경");
-            lock (lockThis)
-            {
-                DirectoryCopy(@sourceDirPath, @desDirPath, true);
-            }
+            Thread.Sleep(milliseconds);
+            DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
         void Renamed(object sender, RenamedEventArgs e)
         {
             MakeMessage(e.FullPath, "이름 변경");
-            lock (lockThis)
-            {
-                DirectoryCopy(@sourceDirPath, @desDirPath, true);
-            }
+            Thread.Sleep(milliseconds);
+            DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
 
         void Form1_testeventhandler(string path)
@@ -101,9 +93,9 @@ namespace TestFileinfoInDirectory
         private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {
             // 지정된 디렉토리의 서브 디렉토리를 가져옵니다.
-            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            DirectoryInfo dirSource = new DirectoryInfo(sourceDirName);
 
-            if (!dir.Exists)
+            if (!dirSource.Exists)
             {
                 throw new DirectoryNotFoundException(
                     "Source directory does not exist or could not be found: "
@@ -119,20 +111,20 @@ namespace TestFileinfoInDirectory
             //  디렉토리에서 파일을 가져 와서 새 위치로 복사하십시오.
             try
             {
-                FileInfo[] files = dir.GetFiles();
+                FileInfo[] files = dirSource.GetFiles();
                 foreach (FileInfo file in files)
                 {
                     string temppath = Path.Combine(destDirName, file.Name);
                     file.CopyTo(temppath, true);
-                    //File.Copy(sourceDirName, destDirName);
+                    //File.Copy(file.Name, destDirName, true);
                 }
             }
             catch (IOException e)
             {
-                Console.WriteLine(e.Message);
+               Console.WriteLine(e.Message);
             }
             // 서브 디렉토리를 복사하는 경우 서브 디렉토리를 복사하고 그 내용을 새 위치로 복사하십시오.
-            DirectoryInfo[] dirs = dir.GetDirectories();
+            DirectoryInfo[] dirs = dirSource.GetDirectories();
             if (copySubDirs)
             {
                 foreach (DirectoryInfo subdir in dirs)
