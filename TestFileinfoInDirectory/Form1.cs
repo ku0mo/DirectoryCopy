@@ -15,7 +15,8 @@ namespace TestFileinfoInDirectory
         delegate void mydele(string path);
         event mydele testeventhandler;
         private Object lockThis = new object();
-        static int milliseconds = 500;
+        static int milliseconds = 100;
+        FileSystemWatcher watcher = new FileSystemWatcher();
 
         string sourceDirPath;
         string desDirPath;
@@ -28,11 +29,10 @@ namespace TestFileinfoInDirectory
 
         private void InitWatcher()
         {
-            FileSystemWatcher watcher = new FileSystemWatcher();
             watcher.IncludeSubdirectories = true;
-            watcher.Path = @"D:\sourceDir";
-            
-            //watcher.Path = @sourceDirPath;
+            //watcher.Path = @"D:\sourceDir";
+
+            watcher.Path = @sourceDirPath;
             watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Attributes | NotifyFilters.CreationTime | NotifyFilters.LastAccess | NotifyFilters.Size;
             watcher.Filter = "";
             watcher.Created += new FileSystemEventHandler(Created);
@@ -84,6 +84,10 @@ namespace TestFileinfoInDirectory
             {
                 path = string.Format("{0} 폴더가 {1}되었습니다", path, msg);
             }
+            else if(extension == ".tmp" || extension == ".TMP")
+            {
+                return;
+            }
             else
             {
                 path = string.Format("{0} 파일이 {1}되었습니다", path, msg);
@@ -121,7 +125,7 @@ namespace TestFileinfoInDirectory
             }
             catch (IOException e)
             {
-               Console.WriteLine(e.Message);
+                MessageBox.Show(e.Message);
             }
             // 서브 디렉토리를 복사하는 경우 서브 디렉토리를 복사하고 그 내용을 새 위치로 복사하십시오.
             DirectoryInfo[] dirs = dirSource.GetDirectories();
@@ -135,7 +139,7 @@ namespace TestFileinfoInDirectory
             }
         }
 
-        private void button1_Click(object sender, EventArgs e) // 공유 폴더 
+        private void button1_Click(object sender, EventArgs e) // 공유 폴더 경로
         {
             FolderBrowserDialog folderBrowse = new FolderBrowserDialog();
 
@@ -145,7 +149,7 @@ namespace TestFileinfoInDirectory
             }
         }
 
-        private void button2_Click(object sender, EventArgs e) // 로컬 저장소
+        private void button2_Click(object sender, EventArgs e) // 로컬 저장소 경로
         {
             FolderBrowserDialog folderBrowse = new FolderBrowserDialog();
 
@@ -155,15 +159,27 @@ namespace TestFileinfoInDirectory
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e) // 동기 시작 버튼
         {
-            //sourceDirPath = textBox1.Text;
-            sourceDirPath = @"D:\sourceDir";
-            //desDirPath = textBox2.Text;
-            desDirPath = @"D:\destDir";
-
+            sourceDirPath = textBox1.Text;
+            //sourceDirPath = @"D:\sourceDir";
+            desDirPath = textBox2.Text;
+            //desDirPath = @"D:\destDir";
+            if (sourceDirPath == "" || desDirPath == "")
+            {
+                MessageBox.Show("경로를 지정하세요.");
+                return;
+            }
             button3.Enabled = false;
-            InitWatcher();
+            button3.Text = "동기화 가동";
+
+            InitWatcher(); // 감시 시작
+        }
+
+        private void button4_Click(object sender, EventArgs e) // 중지 버튼
+        {
+            watcher.EnableRaisingEvents = false;
+            button3.Enabled = true;
         }
     }
 }
