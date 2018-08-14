@@ -49,8 +49,8 @@ namespace TestFileinfoInDirectory
         void Deleted(object sender, FileSystemEventArgs e)
         {
             MakeMessage(e.FullPath, "삭제");
-            Thread.Sleep(milliseconds);
-            DirectoryCopy(@sourceDirPath, @desDirPath, true);
+            //Thread.Sleep(milliseconds);
+            //DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
         void Created(object sender, FileSystemEventArgs e)
         {
@@ -84,7 +84,7 @@ namespace TestFileinfoInDirectory
             {
                 path = string.Format("{0} 폴더가 {1}되었습니다", path, msg);
             }
-            else if(extension == ".tmp" || extension == ".TMP")
+            else if(extension == ".tmp" || extension == ".TMP")// 임시 폴더는 출력 안함
             {
                 return;
             }
@@ -118,6 +118,10 @@ namespace TestFileinfoInDirectory
                 FileInfo[] files = dirSource.GetFiles();
                 foreach (FileInfo file in files)
                 {
+                    if(file.Extension == ".tmp" || file.Extension == ".TMP")
+                    {
+                        return;
+                    }
                     string temppath = Path.Combine(destDirName, file.Name);
                     file.CopyTo(temppath, true);
                     //File.Copy(file.Name, destDirName, true);
