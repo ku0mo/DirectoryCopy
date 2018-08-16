@@ -13,91 +13,122 @@ namespace TestFileinfoInDirectory
     public partial class Form1 : Form
     {
         delegate void mydele(string path);
-        event mydele testeventhandler;
-        private Object lockThis = new object();
-        static int milliseconds = 100;
-        FileSystemWatcher watcher = new FileSystemWatcher();
-
+        delegate void mydele2(string path);
+        event mydele testeventhandler; // listbox1
+        event mydele2 testeventhandler2; // listbox2
+        static int milliseconds = 30;
+        FileSystemWatcher watcherSourceDir = new FileSystemWatcher();
+        FileSystemWatcher watcherDestinationDir = new FileSystemWatcher();
         string sourceDirPath;
         string desDirPath;
 
         public Form1()
         {
             InitializeComponent();
-            //InitWatcher();
         }
 
-        private void InitWatcher()
+        private void InitWatcherDestinationDir()
         {
-            watcher.IncludeSubdirectories = true;
+            watcherDestinationDir.IncludeSubdirectories = true;
+
+            watcherDestinationDir.Path = desDirPath;
+            watcherDestinationDir.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Attributes | NotifyFilters.CreationTime | NotifyFilters.LastAccess | NotifyFilters.Size;
+            watcherDestinationDir.Filter = "";
+            watcherDestinationDir.Created += new FileSystemEventHandler(Changed2);
+            watcherDestinationDir.Deleted += new FileSystemEventHandler(Changed2);
+            watcherDestinationDir.Changed += new FileSystemEventHandler(Changed2);
+            //watcherDestinationDir.Renamed += new RenamedEventHandler(Renamed2);
+            watcherDestinationDir.EnableRaisingEvents = true;
+
+            testeventhandler2 += new mydele2(Form1_testeventhandler2);
+        }
+        private void InitWatcherSourceDir()
+        {
+            watcherSourceDir.IncludeSubdirectories = true;
             //watcher.Path = @"D:\sourceDir";
 
-            watcher.Path = @sourceDirPath;
-            watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Attributes | NotifyFilters.CreationTime | NotifyFilters.LastAccess | NotifyFilters.Size;
-            watcher.Filter = "";
-            watcher.Created += new FileSystemEventHandler(Created);
-            watcher.Deleted += new FileSystemEventHandler(Deleted);
-            watcher.Changed += new FileSystemEventHandler(Changed);
-            watcher.Renamed += new RenamedEventHandler(Renamed);
-            watcher.EnableRaisingEvents = true;
+            watcherSourceDir.Path = sourceDirPath;
+            watcherSourceDir.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName| NotifyFilters.Attributes | NotifyFilters.CreationTime | NotifyFilters.LastAccess | NotifyFilters.Size;
+            watcherSourceDir.Filter = "";
+            watcherSourceDir.Created += new FileSystemEventHandler(Changed);
+            watcherSourceDir.Deleted += new FileSystemEventHandler(Changed);
+            watcherSourceDir.Changed += new FileSystemEventHandler(Changed);
+            watcherSourceDir.Renamed += new RenamedEventHandler(Renamed);
+            watcherSourceDir.EnableRaisingEvents = true;
 
             testeventhandler += new mydele(Form1_testeventhandler);
 
             DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
 
-        void Deleted(object sender, FileSystemEventArgs e)
-        {
-            MakeMessage(e.FullPath, "삭제");
-            //Thread.Sleep(milliseconds);
-            //DirectoryCopy(@sourceDirPath, @desDirPath, true);
-        }
-        void Created(object sender, FileSystemEventArgs e)
-        {
-            MakeMessage(e.FullPath, "생성");
-            Thread.Sleep(milliseconds);
-            DirectoryCopy(@sourceDirPath, @desDirPath, true);
-        }
+
+        //////////////////////////////////////////////////////////////
         void Changed(object sender, FileSystemEventArgs e)
         {
-            MakeMessage(e.FullPath, "변경");
+            string msg = string.Format(e.FullPath + " " + e.ChangeType);
+            MakeMessage(e.FullPath, msg, "sourceDir");
             Thread.Sleep(milliseconds);
             DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
         void Renamed(object sender, RenamedEventArgs e)
         {
-            MakeMessage(e.FullPath, "이름 변경");
-            Thread.Sleep(milliseconds);
-            DirectoryCopy(@sourceDirPath, @desDirPath, true);
+            string msg = string.Format("{0} renamed to {1}", e.OldFullPath, e.FullPath);
+            MakeMessage(e.FullPath, msg, "sourceDir");
+            //Thread.Sleep(milliseconds);
+            //DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
+        //////////////////////////////////////////////////////////////
 
+        void Changed2(object sender, FileSystemEventArgs e)
+        {
+            string msg = string.Format(e.FullPath + " " + e.ChangeType);
+            MakeMessage(e.FullPath, msg, "destinationDir");
+        }
+        void Renamed2(object sender, RenamedEventArgs e)
+        {
+            string msg = string.Format("{0} renamed to {1}", e.OldFullPath, e.FullPath);
+            MakeMessage(e.FullPath, msg, "destinationDir");
+        }
+        //////////////////////////////////////////////////////////////
         void Form1_testeventhandler(string path)
         {
             listBox1.Items.Add(path);
         }
-
-        private void MakeMessage(string FullPath, string msg)
+        void Form1_testeventhandler2(string path)
         {
-            string path = string.Format("{0}\\{1}", Application.StartupPath, FullPath);
+            listBox2.Items.Add(path);
+        }
+
+        private void MakeMessage(string FullPath, string msg, string WhatDir)
+        {
+            string path = string.Format("{0}//{1}", Application.StartupPath, FullPath);
             string extension = Path.GetExtension(path);
-            if (extension == string.Empty)
+
+            if (extension == ".tmp" || extension == ".TMP")
             {
-                path = string.Format("{0} 폴더가 {1}되었습니다", path, msg);
-            }
-            else if(extension == ".tmp" || extension == ".TMP")// 임시 폴더는 출력 안함
-            {
-                return;
+
             }
             else
             {
-                path = string.Format("{0} 파일이 {1}되었습니다", path, msg);
+                switch (WhatDir)
+                {
+                    case "sourceDir":
+                        listBox1.BeginInvoke(testeventhandler, new object[] { msg });
+                        break;
+                    case "destinationDir":
+                        listBox2.BeginInvoke(testeventhandler2, new object[] { msg });
+                        break;
+                    default:
+                        break;
+                }
             }
-            listBox1.BeginInvoke(testeventhandler, new object[] { path });
         }
+
         private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {
             // 지정된 디렉토리의 서브 디렉토리를 가져옵니다.
             DirectoryInfo dirSource = new DirectoryInfo(sourceDirName);
+            DirectoryInfo dirDestination = new DirectoryInfo(destDirName);
 
             if (!dirSource.Exists)
             {
@@ -115,16 +146,25 @@ namespace TestFileinfoInDirectory
             //  디렉토리에서 파일을 가져 와서 새 위치로 복사하십시오.
             try
             {
-                FileInfo[] files = dirSource.GetFiles();
-                foreach (FileInfo file in files)
+                FileInfo[] filesSource = dirSource.GetFiles();
+                FileInfo[] filesDestination = dirDestination.GetFiles();
+
+                foreach (FileInfo fileSource in filesSource)
                 {
-                    if(file.Extension == ".tmp" || file.Extension == ".TMP")
+                    Console.WriteLine(fileSource.Name[0]);
+                    if(fileSource.Name[0] == '~')   // 복제 파일 복사 안함
                     {
-                        return;
+
                     }
-                    string temppath = Path.Combine(destDirName, file.Name);
-                    file.CopyTo(temppath, true);
-                    //File.Copy(file.Name, destDirName, true);
+                    if (fileSource.Extension == ".tmp" || fileSource.Extension == ".TMP") // 임시 파일은 복사 안함
+                    {
+
+                    }
+                    else
+                    {
+                        string temppath = Path.Combine(destDirName, fileSource.Name);
+                        fileSource.CopyTo(temppath, true);
+                    }
                 }
             }
             catch (IOException e)
@@ -132,15 +172,23 @@ namespace TestFileinfoInDirectory
                 MessageBox.Show(e.Message);
             }
             // 서브 디렉토리를 복사하는 경우 서브 디렉토리를 복사하고 그 내용을 새 위치로 복사하십시오.
-            DirectoryInfo[] dirs = dirSource.GetDirectories();
-            if (copySubDirs)
+            try
             {
-                foreach (DirectoryInfo subdir in dirs)
+                DirectoryInfo[] dirs = dirSource.GetDirectories();
+                if (copySubDirs)
                 {
-                    string temppath = Path.Combine(destDirName, subdir.Name);
-                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                    foreach (DirectoryInfo subdir in dirs)
+                    {
+                        string temppath = Path.Combine(destDirName, subdir.Name);
+                        DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                    }
                 }
             }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
         }
 
         private void button1_Click(object sender, EventArgs e) // 공유 폴더 경로
@@ -165,10 +213,10 @@ namespace TestFileinfoInDirectory
 
         private void button3_Click(object sender, EventArgs e) // 동기 시작 버튼
         {
-            sourceDirPath = textBox1.Text;
-            //sourceDirPath = @"D:\sourceDir";
-            desDirPath = textBox2.Text;
-            //desDirPath = @"D:\destDir";
+            //sourceDirPath = textBox1.Text;
+            sourceDirPath = @"D:\sourceDir";
+            //desDirPath = textBox2.Text;
+            desDirPath = @"D:\destDir";
             if (sourceDirPath == "" || desDirPath == "")
             {
                 MessageBox.Show("경로를 지정하세요.");
@@ -177,13 +225,24 @@ namespace TestFileinfoInDirectory
             button3.Enabled = false;
             button3.Text = "동기화 가동";
 
-            InitWatcher(); // 감시 시작
+            InitWatcherSourceDir(); // 감시 시작
+            InitWatcherDestinationDir();
         }
 
         private void button4_Click(object sender, EventArgs e) // 중지 버튼
         {
-            watcher.EnableRaisingEvents = false;
+            watcherSourceDir.EnableRaisingEvents = false;
             button3.Enabled = true;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            listBox2.Items.Clear();
         }
     }
 }
