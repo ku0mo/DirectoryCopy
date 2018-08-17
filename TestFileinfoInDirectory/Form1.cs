@@ -21,6 +21,8 @@ namespace TestFileinfoInDirectory
         FileSystemWatcher watcherDestinationDir = new FileSystemWatcher();
         string sourceDirPath;
         string desDirPath;
+        bool isFirst = true;
+
 
         public Form1()
         {
@@ -30,7 +32,7 @@ namespace TestFileinfoInDirectory
         private void InitWatcherDestinationDir()
         {
             watcherDestinationDir.IncludeSubdirectories = true;
-
+            
             watcherDestinationDir.Path = desDirPath;
             watcherDestinationDir.NotifyFilter = NotifyFilters.FileName /*| NotifyFilters.DirectoryName /*| NotifyFilters.Attributes | NotifyFilters.CreationTime /*| NotifyFilters.LastAccess */ | NotifyFilters.Size;
             watcherDestinationDir.Filter = "";
@@ -240,6 +242,7 @@ namespace TestFileinfoInDirectory
             sourceDirPath = @"D:\sourceDir";
             //desDirPath = textBox2.Text;
             desDirPath = @"D:\destDir";
+
             if (sourceDirPath == "" || desDirPath == "")
             {
                 MessageBox.Show("경로를 지정하세요.");
@@ -248,14 +251,24 @@ namespace TestFileinfoInDirectory
             button3.Enabled = false;
             button3.Text = "동기화 가동";
 
-            InitWatcherSourceDir(); // 감시 시작
-            InitWatcherDestinationDir();
+            if (isFirst)
+            {
+                InitWatcherSourceDir(); // 감시 시작
+                InitWatcherDestinationDir();
+                isFirst = false;
+            }
+            else
+            {
+                watcherSourceDir.EnableRaisingEvents = true;
+                watcherDestinationDir.EnableRaisingEvents = true;
+            }
         }
 
         private void button4_Click(object sender, EventArgs e) // 중지 버튼
         {
             watcherSourceDir.EnableRaisingEvents = false;
             watcherDestinationDir.EnableRaisingEvents = false;
+
             button3.Enabled = true;
         }
 
