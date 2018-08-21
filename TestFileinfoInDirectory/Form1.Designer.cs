@@ -231,7 +231,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(815, 500);
+            this.ClientSize = new System.Drawing.Size(817, 500);
             this.Controls.Add(this.CopyBtn);
             this.Controls.Add(this.AutoStopBtn);
             this.Controls.Add(this.domainUpDown1);

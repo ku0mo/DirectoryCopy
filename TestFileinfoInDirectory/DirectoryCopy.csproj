@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6876D4E9-6F5A-4AB6-B83C-0DDFE281B039}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TestFileinfoInDirectory</RootNamespace>
     <AssemblyName>TestFileinfoInDirectory</AssemblyName>
