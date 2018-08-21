@@ -140,7 +140,7 @@ namespace TestFileinfoInDirectory
             watcherDestinationDir.Renamed += new RenamedEventHandler(Renamed2);
             watcherDestinationDir.EnableRaisingEvents = true;
 
-            testeventhandler2 += new mydele2(Form1_testeventhandler2);
+            //testeventhandler2 += new mydele2(Form1_testeventhandler2);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace TestFileinfoInDirectory
             watcherSourceDir.Renamed += new RenamedEventHandler(Renamed);
             watcherSourceDir.EnableRaisingEvents = true;
 
-            testeventhandler += new mydele(Form1_testeventhandler);
+            //testeventhandler += new mydele(Form1_testeventhandler);
         }
 
         /// <summary>
@@ -521,8 +521,8 @@ namespace TestFileinfoInDirectory
 
         private void AutoStopBtn_Click(object sender, EventArgs e)
         {
-            justWatcherSourceDir.EnableRaisingEvents = false;
-            justWatcherDestinationDir.EnableRaisingEvents = false;
+            //justWatcherSourceDir.EnableRaisingEvents = false;
+            //justWatcherDestinationDir.EnableRaisingEvents = false;
 
             RealTimeCopyButton.Enabled = true;
             CopyStopButton.Enabled = true;
@@ -545,7 +545,7 @@ namespace TestFileinfoInDirectory
                 MessageBox.Show("경로를 지정하세요.");
                 return;
             }
-            if (isFirst)
+            if (isJustFirst)
             {
                 //JustWatcherSourceDir(); // 감시 시작
                 //JustWatcherDestinationDir();
