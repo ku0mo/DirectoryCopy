@@ -25,18 +25,34 @@ namespace TestFileinfoInDirectory
         FileSystemWatcher justWatcherSourceDir = new FileSystemWatcher();
         FileSystemWatcher justWatcherDestinationDir = new FileSystemWatcher();
 
+
+        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+
         string sourceDirPath;
         string desDirPath;
         bool isFirst = true;
+        bool isJustFirst = true;
 
 
         public Form1()
         {
             InitializeComponent();
+            JustWatcherSourceDir();
+            JustWatcherDestinationDir();
         }
 
         private void JustWatcherSourceDir()
         {
+            //sourceDirPath = textBox1.Text;
+            sourceDirPath = @"D:\sourceDir";
+            //desDirPath = textBox2.Text;
+            desDirPath = @"D:\destDir";
+
+            if (sourceDirPath == "" || desDirPath == "")
+            {
+                MessageBox.Show("경로를 지정하세요.");
+                return;
+            }
             justWatcherSourceDir.IncludeSubdirectories = true;
 
             justWatcherSourceDir.Path = sourceDirPath;
@@ -52,6 +68,16 @@ namespace TestFileinfoInDirectory
         }
         private void JustWatcherDestinationDir()
         {
+            //sourceDirPath = textBox1.Text;
+            sourceDirPath = @"D:\sourceDir";
+            //desDirPath = textBox2.Text;
+            desDirPath = @"D:\destDir";
+
+            if (sourceDirPath == "" || desDirPath == "")
+            {
+                MessageBox.Show("경로를 지정하세요.");
+                return;
+            }
             justWatcherDestinationDir.IncludeSubdirectories = true;
 
             justWatcherDestinationDir.Path = desDirPath;
@@ -142,15 +168,15 @@ namespace TestFileinfoInDirectory
         /// </summary>
         void Changed(object sender, FileSystemEventArgs e)
         {
-            string msg = string.Format(e.FullPath + " " + e.ChangeType);
-            MakeMessage(e.FullPath, msg, "sourceDir");
+            //string msg = string.Format(e.FullPath + " " + e.ChangeType);
+            //MakeMessage(e.FullPath, msg, "sourceDir");
             Thread.Sleep(milliseconds);
             DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
         void Renamed(object sender, RenamedEventArgs e)
         {
-            string msg = string.Format("{0} renamed to {1}", e.OldFullPath, e.FullPath);
-            MakeMessage(e.FullPath, msg, "sourceDir");
+            //string msg = string.Format("{0} renamed to {1}", e.OldFullPath, e.FullPath);
+            //MakeMessage(e.FullPath, msg, "sourceDir");
             Thread.Sleep(milliseconds);
             DirectoryCopy(@sourceDirPath, @desDirPath, true);
         }
@@ -159,13 +185,13 @@ namespace TestFileinfoInDirectory
         /// </summary>
         void Changed2(object sender, FileSystemEventArgs e)
         {
-            string msg = string.Format(e.FullPath + " " + e.ChangeType);
-            MakeMessage(e.FullPath, msg, "destinationDir");
+            //string msg = string.Format(e.FullPath + " " + e.ChangeType);
+            //MakeMessage(e.FullPath, msg, "destinationDir");
         }
         void Renamed2(object sender, RenamedEventArgs e)
         {
-            string msg = string.Format("{0} renamed to {1}", e.OldFullPath, e.FullPath);
-            MakeMessage(e.FullPath, msg, "destinationDir");
+            //string msg = string.Format("{0} renamed to {1}", e.OldFullPath, e.FullPath);
+            //MakeMessage(e.FullPath, msg, "destinationDir");
         }
 
         /// <summary>
@@ -343,26 +369,37 @@ namespace TestFileinfoInDirectory
             //desDirPath = textBox2.Text;
             desDirPath = @"D:\destDir";
 
-            if (sourceDirPath == "" || desDirPath == "")
-            {
-                MessageBox.Show("경로를 지정하세요.");
-                return;
-            }
-            CopyButton.Enabled = false;
-            CopyButton.Text = "동기화 가동";
+            AutoScanBtn.Enabled = false;
+            AutoStopBtn.Enabled = false;
 
-            if (isFirst)
+            try
             {
-                WatcherSourceDir(); // 감시 시작
-                WatcherDestinationDir();
-                isFirst = false;
+                if (sourceDirPath == "" || desDirPath == "")
+                {
+                    MessageBox.Show("경로를 지정하세요.");
+                    return;
+                }
+                RealTimeCopyButton.Enabled = false;
+                RealTimeCopyButton.Text = "동기화 가동";
+
+                if (isFirst)
+                {
+                    WatcherSourceDir(); // 감시 시작
+                    WatcherDestinationDir();
+                    isFirst = false;
+                }
+                else
+                {
+                    watcherSourceDir.EnableRaisingEvents = true;
+                    watcherDestinationDir.EnableRaisingEvents = true;
+                    DirectoryCopy(sourceDirPath, desDirPath, true);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                watcherSourceDir.EnableRaisingEvents = true;
-                watcherDestinationDir.EnableRaisingEvents = true;
-                DirectoryCopy(@sourceDirPath, @desDirPath, true);
+                MessageBox.Show("{0}" + ex);
             }
+
         }
         /// <summary>
         /// Stop Button 클릭시 이벤트 핸들러
@@ -371,10 +408,12 @@ namespace TestFileinfoInDirectory
         /// <param name="e"></param>
         private void StopButton(object sender, EventArgs e) // 중지 버튼
         {
+            AutoScanBtn.Enabled = true;
+            AutoStopBtn.Enabled = true;
             watcherSourceDir.EnableRaisingEvents = false;
             watcherDestinationDir.EnableRaisingEvents = false;
 
-            CopyButton.Enabled = true;
+            RealTimeCopyButton.Enabled = true;
         }
 
         /// <summary>
@@ -443,13 +482,16 @@ namespace TestFileinfoInDirectory
 
         private void AutoBtn_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            RealTimeCopyButton.Enabled = false;
+            CopyStopButton.Enabled = false;
+
             timer.Interval = AutoScanTimer;
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
 
             AutoScanBtn.Enabled = false;
             AutoScanBtn.Text = "동기화 가동";
+            domainUpDown1.Enabled = false;
         }
         void timer_Tick(object sender, EventArgs e)
         {
@@ -473,14 +515,43 @@ namespace TestFileinfoInDirectory
             {
                 justWatcherSourceDir.EnableRaisingEvents = true;
                 justWatcherDestinationDir.EnableRaisingEvents = true;
-                DirectoryCopy(@sourceDirPath, @desDirPath, true);
+                DirectoryCopy(sourceDirPath, desDirPath, true);
             }
         }
 
         private void AutoStopBtn_Click(object sender, EventArgs e)
         {
+            justWatcherSourceDir.EnableRaisingEvents = false;
+            justWatcherDestinationDir.EnableRaisingEvents = false;
+
+            RealTimeCopyButton.Enabled = true;
+            CopyStopButton.Enabled = true;
+
+            timer.Stop();
             AutoScanBtn.Enabled = true;
+            domainUpDown1.Enabled = true;
             AutoScanBtn.Text = "Auto Scan";
+        }
+
+        private void justOneCopy(object sender, EventArgs e)
+        {
+            //sourceDirPath = textBox1.Text;
+            sourceDirPath = @"D:\sourceDir";
+            //desDirPath = textBox2.Text;
+            desDirPath = @"D:\destDir";
+
+            if (sourceDirPath == "" || desDirPath == "")
+            {
+                MessageBox.Show("경로를 지정하세요.");
+                return;
+            }
+            if (isFirst)
+            {
+                //JustWatcherSourceDir(); // 감시 시작
+                //JustWatcherDestinationDir();
+                isJustFirst = false;
+            }
+            DirectoryCopy(sourceDirPath, desDirPath, true);
         }
     }
 }

@@ -35,7 +35,7 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.sourceDirBrowsingButton = new System.Windows.Forms.Button();
             this.DestinationDirBrowsingButton = new System.Windows.Forms.Button();
-            this.CopyButton = new System.Windows.Forms.Button();
+            this.RealTimeCopyButton = new System.Windows.Forms.Button();
             this.CopyStopButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -46,6 +46,7 @@
             this.AutoScanBtn = new System.Windows.Forms.Button();
             this.domainUpDown1 = new System.Windows.Forms.DomainUpDown();
             this.AutoStopBtn = new System.Windows.Forms.Button();
+            this.CopyBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SourceDirLogListBox
@@ -80,19 +81,19 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(115, 19);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(479, 21);
+            this.textBox1.Size = new System.Drawing.Size(423, 21);
             this.textBox1.TabIndex = 3;
             // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(115, 53);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(479, 21);
+            this.textBox2.Size = new System.Drawing.Size(423, 21);
             this.textBox2.TabIndex = 4;
             // 
             // sourceDirBrowsingButton
             // 
-            this.sourceDirBrowsingButton.Location = new System.Drawing.Point(600, 17);
+            this.sourceDirBrowsingButton.Location = new System.Drawing.Point(544, 17);
             this.sourceDirBrowsingButton.Name = "sourceDirBrowsingButton";
             this.sourceDirBrowsingButton.Size = new System.Drawing.Size(37, 23);
             this.sourceDirBrowsingButton.TabIndex = 5;
@@ -102,7 +103,7 @@
             // 
             // DestinationDirBrowsingButton
             // 
-            this.DestinationDirBrowsingButton.Location = new System.Drawing.Point(600, 51);
+            this.DestinationDirBrowsingButton.Location = new System.Drawing.Point(544, 51);
             this.DestinationDirBrowsingButton.Name = "DestinationDirBrowsingButton";
             this.DestinationDirBrowsingButton.Size = new System.Drawing.Size(37, 23);
             this.DestinationDirBrowsingButton.TabIndex = 6;
@@ -110,21 +111,21 @@
             this.DestinationDirBrowsingButton.UseVisualStyleBackColor = true;
             this.DestinationDirBrowsingButton.Click += new System.EventHandler(this.DestinationDirBrowsingBtn_Click);
             // 
-            // CopyButton
+            // RealTimeCopyButton
             // 
-            this.CopyButton.Location = new System.Drawing.Point(643, 17);
-            this.CopyButton.Name = "CopyButton";
-            this.CopyButton.Size = new System.Drawing.Size(82, 57);
-            this.CopyButton.TabIndex = 7;
-            this.CopyButton.Text = "Copy";
-            this.CopyButton.UseVisualStyleBackColor = true;
-            this.CopyButton.Click += new System.EventHandler(this.CopyBtn_Click);
+            this.RealTimeCopyButton.Location = new System.Drawing.Point(587, 51);
+            this.RealTimeCopyButton.Name = "RealTimeCopyButton";
+            this.RealTimeCopyButton.Size = new System.Drawing.Size(138, 23);
+            this.RealTimeCopyButton.TabIndex = 7;
+            this.RealTimeCopyButton.Text = "Real Time Copy";
+            this.RealTimeCopyButton.UseVisualStyleBackColor = true;
+            this.RealTimeCopyButton.Click += new System.EventHandler(this.CopyBtn_Click);
             // 
             // CopyStopButton
             // 
-            this.CopyStopButton.Location = new System.Drawing.Point(731, 17);
+            this.CopyStopButton.Location = new System.Drawing.Point(731, 51);
             this.CopyStopButton.Name = "CopyStopButton";
-            this.CopyStopButton.Size = new System.Drawing.Size(72, 57);
+            this.CopyStopButton.Size = new System.Drawing.Size(71, 23);
             this.CopyStopButton.TabIndex = 8;
             this.CopyStopButton.Text = "중지";
             this.CopyStopButton.UseVisualStyleBackColor = true;
@@ -216,11 +217,22 @@
             this.AutoStopBtn.UseVisualStyleBackColor = true;
             this.AutoStopBtn.Click += new System.EventHandler(this.AutoStopBtn_Click);
             // 
+            // CopyBtn
+            // 
+            this.CopyBtn.Location = new System.Drawing.Point(587, 17);
+            this.CopyBtn.Name = "CopyBtn";
+            this.CopyBtn.Size = new System.Drawing.Size(215, 23);
+            this.CopyBtn.TabIndex = 19;
+            this.CopyBtn.Text = "Copy";
+            this.CopyBtn.UseVisualStyleBackColor = true;
+            this.CopyBtn.Click += new System.EventHandler(this.justOneCopy);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(815, 500);
+            this.Controls.Add(this.CopyBtn);
             this.Controls.Add(this.AutoStopBtn);
             this.Controls.Add(this.domainUpDown1);
             this.Controls.Add(this.AutoScanBtn);
@@ -231,7 +243,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.CopyStopButton);
-            this.Controls.Add(this.CopyButton);
+            this.Controls.Add(this.RealTimeCopyButton);
             this.Controls.Add(this.DestinationDirBrowsingButton);
             this.Controls.Add(this.sourceDirBrowsingButton);
             this.Controls.Add(this.textBox2);
@@ -256,7 +268,7 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button sourceDirBrowsingButton;
         private System.Windows.Forms.Button DestinationDirBrowsingButton;
-        private System.Windows.Forms.Button CopyButton;
+        private System.Windows.Forms.Button RealTimeCopyButton;
         private System.Windows.Forms.Button CopyStopButton;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
@@ -267,6 +279,7 @@
         private System.Windows.Forms.Button AutoScanBtn;
         private System.Windows.Forms.DomainUpDown domainUpDown1;
         private System.Windows.Forms.Button AutoStopBtn;
+        private System.Windows.Forms.Button CopyBtn;
     }
 }
 
