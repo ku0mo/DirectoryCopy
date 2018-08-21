@@ -397,7 +397,9 @@ namespace TestFileinfoInDirectory
             }
             catch(Exception ex)
             {
-                MessageBox.Show("{0}" + ex);
+                watcherDestinationDir.BeginInit();
+                watcherSourceDir.BeginInit();
+                MessageBox.Show(ex.Message);
             }
 
         }
