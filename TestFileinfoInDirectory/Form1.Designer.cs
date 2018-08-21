@@ -28,31 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.SourceDirLogListBox = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.sourceDirBrowsingButton = new System.Windows.Forms.Button();
+            this.DestinationDirBrowsingButton = new System.Windows.Forms.Button();
+            this.CopyButton = new System.Windows.Forms.Button();
+            this.CopyStopButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.listBox2 = new System.Windows.Forms.ListBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.DestinationDirLogListBox = new System.Windows.Forms.ListBox();
+            this.sourceDirLogDelete = new System.Windows.Forms.Button();
+            this.DestinationDirLogDelete = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.AutoScanBtn = new System.Windows.Forms.Button();
+            this.domainUpDown1 = new System.Windows.Forms.DomainUpDown();
+            this.AutoStopBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // listBox1
+            // SourceDirLogListBox
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.HorizontalScrollbar = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(3, 118);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(808, 160);
-            this.listBox1.TabIndex = 0;
+            this.SourceDirLogListBox.FormattingEnabled = true;
+            this.SourceDirLogListBox.HorizontalScrollbar = true;
+            this.SourceDirLogListBox.ItemHeight = 12;
+            this.SourceDirLogListBox.Location = new System.Drawing.Point(3, 118);
+            this.SourceDirLogListBox.Name = "SourceDirLogListBox";
+            this.SourceDirLogListBox.Size = new System.Drawing.Size(808, 160);
+            this.SourceDirLogListBox.TabIndex = 0;
             // 
             // label1
             // 
@@ -86,45 +90,45 @@
             this.textBox2.Size = new System.Drawing.Size(479, 21);
             this.textBox2.TabIndex = 4;
             // 
-            // button1
+            // sourceDirBrowsingButton
             // 
-            this.button1.Location = new System.Drawing.Point(600, 17);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(37, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "...";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.sourceDirBrowsingButton.Location = new System.Drawing.Point(600, 17);
+            this.sourceDirBrowsingButton.Name = "sourceDirBrowsingButton";
+            this.sourceDirBrowsingButton.Size = new System.Drawing.Size(37, 23);
+            this.sourceDirBrowsingButton.TabIndex = 5;
+            this.sourceDirBrowsingButton.Text = "...";
+            this.sourceDirBrowsingButton.UseVisualStyleBackColor = true;
+            this.sourceDirBrowsingButton.Click += new System.EventHandler(this.SourceDirBrowsingBtn_Click);
             // 
-            // button2
+            // DestinationDirBrowsingButton
             // 
-            this.button2.Location = new System.Drawing.Point(600, 51);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(37, 23);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "...";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.DestinationDirBrowsingButton.Location = new System.Drawing.Point(600, 51);
+            this.DestinationDirBrowsingButton.Name = "DestinationDirBrowsingButton";
+            this.DestinationDirBrowsingButton.Size = new System.Drawing.Size(37, 23);
+            this.DestinationDirBrowsingButton.TabIndex = 6;
+            this.DestinationDirBrowsingButton.Text = "...";
+            this.DestinationDirBrowsingButton.UseVisualStyleBackColor = true;
+            this.DestinationDirBrowsingButton.Click += new System.EventHandler(this.DestinationDirBrowsingBtn_Click);
             // 
-            // button3
+            // CopyButton
             // 
-            this.button3.Location = new System.Drawing.Point(643, 17);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(95, 57);
-            this.button3.TabIndex = 7;
-            this.button3.Text = "Copy";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.CopyButton.Location = new System.Drawing.Point(643, 17);
+            this.CopyButton.Name = "CopyButton";
+            this.CopyButton.Size = new System.Drawing.Size(82, 57);
+            this.CopyButton.TabIndex = 7;
+            this.CopyButton.Text = "Copy";
+            this.CopyButton.UseVisualStyleBackColor = true;
+            this.CopyButton.Click += new System.EventHandler(this.CopyBtn_Click);
             // 
-            // button4
+            // CopyStopButton
             // 
-            this.button4.Location = new System.Drawing.Point(745, 17);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(60, 57);
-            this.button4.TabIndex = 8;
-            this.button4.Text = "중지";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.CopyStopButton.Location = new System.Drawing.Point(731, 17);
+            this.CopyStopButton.Name = "CopyStopButton";
+            this.CopyStopButton.Size = new System.Drawing.Size(72, 57);
+            this.CopyStopButton.TabIndex = 8;
+            this.CopyStopButton.Text = "중지";
+            this.CopyStopButton.UseVisualStyleBackColor = true;
+            this.CopyStopButton.Click += new System.EventHandler(this.StopButton);
             // 
             // label3
             // 
@@ -144,57 +148,100 @@
             this.label4.TabIndex = 10;
             this.label4.Text = "destinationDirectory Log Infomation(로컬 저장소)";
             // 
-            // listBox2
+            // DestinationDirLogListBox
             // 
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.HorizontalScrollbar = true;
-            this.listBox2.ItemHeight = 12;
-            this.listBox2.Location = new System.Drawing.Point(3, 322);
-            this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(808, 172);
-            this.listBox2.TabIndex = 11;
+            this.DestinationDirLogListBox.FormattingEnabled = true;
+            this.DestinationDirLogListBox.HorizontalScrollbar = true;
+            this.DestinationDirLogListBox.ItemHeight = 12;
+            this.DestinationDirLogListBox.Location = new System.Drawing.Point(3, 322);
+            this.DestinationDirLogListBox.Name = "DestinationDirLogListBox";
+            this.DestinationDirLogListBox.Size = new System.Drawing.Size(808, 172);
+            this.DestinationDirLogListBox.TabIndex = 11;
             // 
-            // button5
+            // sourceDirLogDelete
             // 
-            this.button5.Location = new System.Drawing.Point(284, 87);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(104, 25);
-            this.button5.TabIndex = 12;
-            this.button5.Text = "log delete";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.sourceDirLogDelete.Location = new System.Drawing.Point(284, 87);
+            this.sourceDirLogDelete.Name = "sourceDirLogDelete";
+            this.sourceDirLogDelete.Size = new System.Drawing.Size(104, 25);
+            this.sourceDirLogDelete.TabIndex = 12;
+            this.sourceDirLogDelete.Text = "log delete";
+            this.sourceDirLogDelete.UseVisualStyleBackColor = true;
+            this.sourceDirLogDelete.Click += new System.EventHandler(this.SourceDirLogDeletebutton_Click);
             // 
-            // button6
+            // DestinationDirLogDelete
             // 
-            this.button6.Location = new System.Drawing.Point(284, 291);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(104, 25);
-            this.button6.TabIndex = 13;
-            this.button6.Text = "log delete";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.DestinationDirLogDelete.Location = new System.Drawing.Point(284, 291);
+            this.DestinationDirLogDelete.Name = "DestinationDirLogDelete";
+            this.DestinationDirLogDelete.Size = new System.Drawing.Size(104, 25);
+            this.DestinationDirLogDelete.TabIndex = 13;
+            this.DestinationDirLogDelete.Text = "log delete";
+            this.DestinationDirLogDelete.UseVisualStyleBackColor = true;
+            this.DestinationDirLogDelete.Click += new System.EventHandler(this.DestinationDirLogDeletebutton_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(445, 92);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(93, 12);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Set Sync Time:";
+            // 
+            // AutoScanBtn
+            // 
+            this.AutoScanBtn.Location = new System.Drawing.Point(644, 87);
+            this.AutoScanBtn.Name = "AutoScanBtn";
+            this.AutoScanBtn.Size = new System.Drawing.Size(81, 23);
+            this.AutoScanBtn.TabIndex = 16;
+            this.AutoScanBtn.Text = "Auto Scan";
+            this.AutoScanBtn.UseVisualStyleBackColor = true;
+            this.AutoScanBtn.Click += new System.EventHandler(this.AutoBtn_Click);
+            // 
+            // domainUpDown1
+            // 
+            this.domainUpDown1.Location = new System.Drawing.Point(544, 88);
+            this.domainUpDown1.Name = "domainUpDown1";
+            this.domainUpDown1.Size = new System.Drawing.Size(94, 21);
+            this.domainUpDown1.TabIndex = 17;
+            this.domainUpDown1.Text = "domainUpDown1";
+            this.domainUpDown1.SelectedItemChanged += new System.EventHandler(this.domainUpDown1_SelectedItemChanged);
+            // 
+            // AutoStopBtn
+            // 
+            this.AutoStopBtn.Location = new System.Drawing.Point(731, 87);
+            this.AutoStopBtn.Name = "AutoStopBtn";
+            this.AutoStopBtn.Size = new System.Drawing.Size(71, 23);
+            this.AutoStopBtn.TabIndex = 18;
+            this.AutoStopBtn.Text = "Scan Stop";
+            this.AutoStopBtn.UseVisualStyleBackColor = true;
+            this.AutoStopBtn.Click += new System.EventHandler(this.AutoStopBtn_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(815, 500);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.listBox2);
+            this.Controls.Add(this.AutoStopBtn);
+            this.Controls.Add(this.domainUpDown1);
+            this.Controls.Add(this.AutoScanBtn);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.DestinationDirLogDelete);
+            this.Controls.Add(this.sourceDirLogDelete);
+            this.Controls.Add(this.DestinationDirLogListBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.CopyStopButton);
+            this.Controls.Add(this.CopyButton);
+            this.Controls.Add(this.DestinationDirBrowsingButton);
+            this.Controls.Add(this.sourceDirBrowsingButton);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.SourceDirLogListBox);
             this.Name = "Form1";
             this.Text = "DirectoryCopy";
+            this.Load += new System.EventHandler(this.Form1_Load2);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -202,20 +249,24 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox SourceDirLogListBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button sourceDirBrowsingButton;
+        private System.Windows.Forms.Button DestinationDirBrowsingButton;
+        private System.Windows.Forms.Button CopyButton;
+        private System.Windows.Forms.Button CopyStopButton;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ListBox listBox2;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.ListBox DestinationDirLogListBox;
+        private System.Windows.Forms.Button sourceDirLogDelete;
+        private System.Windows.Forms.Button DestinationDirLogDelete;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button AutoScanBtn;
+        private System.Windows.Forms.DomainUpDown domainUpDown1;
+        private System.Windows.Forms.Button AutoStopBtn;
     }
 }
 
