@@ -15,52 +15,35 @@ namespace TestFileinfoInDirectory
     {
         delegate void mydele(string path);
         delegate void mydele2(string path);
+
         event mydele testeventhandler; // listbox1
         event mydele2 testeventhandler2; // listbox2
-        int milliseconds = 30; // Directory read시 프로세서 충돌 제거를 위한 delay
-        int AutoScanTimer = 0;
+
         FileSystemWatcher watcherSourceDir = new FileSystemWatcher();
         FileSystemWatcher watcherDestinationDir = new FileSystemWatcher();
 
         FileSystemWatcher justWatcherSourceDir = new FileSystemWatcher();
         FileSystemWatcher justWatcherDestinationDir = new FileSystemWatcher();
 
+        PathManager pM = new PathManager();
+        TimeManager tM = new TimeManager();
 
         System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
-        string sourceDirPath;
-        string desDirPath;
         bool isFirst = true;
         bool isJustFirst = true;
-
 
         public Form1()
         {
             InitializeComponent();
         }
-
-        bool IsPath()
-        {
-            sourceDirPath = textBox1.Text;
-            //sourceDirPath = @"D:\sourceDir";
-            desDirPath = textBox2.Text;
-            //desDirPath = @"D:\destDir";
-
-            if (sourceDirPath == "" || desDirPath == "")
-            {
-                MessageBox.Show("경로를 지정하세요.");
-                return false;
-            }
-            return true;
-        }
         private void JustWatcherSourceDir()
         {
-            if(!IsPath())
+            if(!pM.IsPath(textBox1, textBox2))
                 return;
 
             justWatcherSourceDir.IncludeSubdirectories = true;
-
-            justWatcherSourceDir.Path = sourceDirPath;
+            justWatcherSourceDir.Path = pM.SourceDirPath;
             justWatcherSourceDir.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Attributes | NotifyFilters.CreationTime | NotifyFilters.LastAccess | NotifyFilters.Size;
             justWatcherSourceDir.Filter = "";
             justWatcherSourceDir.Created += new FileSystemEventHandler(justChangedSource);
@@ -73,12 +56,11 @@ namespace TestFileinfoInDirectory
         }
         private void JustWatcherDestinationDir()
         {
-            if (!IsPath())
+            if (!pM.IsPath(textBox1, textBox2))
                 return;
 
             justWatcherDestinationDir.IncludeSubdirectories = true;
-
-            justWatcherDestinationDir.Path = desDirPath;
+            justWatcherDestinationDir.Path = pM.DesDirPath;
             justWatcherDestinationDir.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName /*| NotifyFilters.Attributes | NotifyFilters.CreationTime /*| NotifyFilters.LastAccess */ | NotifyFilters.Size;
             justWatcherDestinationDir.Filter = "";
             justWatcherDestinationDir.Created += new FileSystemEventHandler(justChangedDestination);
@@ -89,7 +71,6 @@ namespace TestFileinfoInDirectory
 
             testeventhandler2 += new mydele2(Form1_testeventhandler2);
         }
-
         /// <summary>
         /// Source Directory 가 바뀌었을 때, 파일 복사x, 단지 로그 출력
         /// </summary>
@@ -105,7 +86,6 @@ namespace TestFileinfoInDirectory
             string msg = string.Format("{0} renamed to {1}", e.OldFullPath, e.FullPath);
             MakeMessage(e.FullPath, msg, "sourceDir");
         }
-
         /// <summary>
         /// Destination Directoty 가 변경 되었을 때, 파일 복사x 단지 로그 출력
         /// </summary>
@@ -121,7 +101,6 @@ namespace TestFileinfoInDirectory
             string msg = string.Format("{0} renamed to {1}", e.OldFullPath, e.FullPath);
             MakeMessage(e.FullPath, msg, "destinationDir");
         }
-
         /// <summary>
         /// Destination Directory 감시 코드 이벤트 핸들러
         /// </summary>
@@ -129,7 +108,7 @@ namespace TestFileinfoInDirectory
         {
             watcherDestinationDir.IncludeSubdirectories = true;
             
-            watcherDestinationDir.Path = desDirPath;
+            watcherDestinationDir.Path = pM.DesDirPath;
             watcherDestinationDir.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName /*| NotifyFilters.Attributes | NotifyFilters.CreationTime /*| NotifyFilters.LastAccess */ | NotifyFilters.Size;
             watcherDestinationDir.Filter = "";
             watcherDestinationDir.Created += new FileSystemEventHandler(Changed2);
@@ -137,19 +116,15 @@ namespace TestFileinfoInDirectory
             watcherDestinationDir.Changed += new FileSystemEventHandler(Changed2);
             watcherDestinationDir.Renamed += new RenamedEventHandler(Renamed2);
             watcherDestinationDir.EnableRaisingEvents = true;
-
-            //testeventhandler2 += new mydele2(Form1_testeventhandler2);
         }
-
         /// <summary>
         /// Source Directory 감시 코드 이벤트 핸들러
         /// </summary>
         private void WatcherSourceDir()
         {
             watcherSourceDir.IncludeSubdirectories = true;
-            //watcher.Path = @"D:\sourceDir";
 
-            watcherSourceDir.Path = sourceDirPath;
+            watcherSourceDir.Path = pM.SourceDirPath;
             watcherSourceDir.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Attributes | NotifyFilters.CreationTime | NotifyFilters.LastAccess | NotifyFilters.Size;
             watcherSourceDir.Filter = "";
             watcherSourceDir.Created += new FileSystemEventHandler(Changed);
@@ -157,39 +132,28 @@ namespace TestFileinfoInDirectory
             watcherSourceDir.Changed += new FileSystemEventHandler(Changed);
             watcherSourceDir.Renamed += new RenamedEventHandler(Renamed);
             watcherSourceDir.EnableRaisingEvents = true;
-
-            //testeventhandler += new mydele(Form1_testeventhandler);
         }
-
         /// <summary>
         /// Source Directory 이벤트 핸들러
         /// </summary>
         void Changed(object sender, FileSystemEventArgs e)
         {
-            //string msg = string.Format(e.FullPath + " " + e.ChangeType);
-            //MakeMessage(e.FullPath, msg, "sourceDir");
-            Thread.Sleep(milliseconds);
-            DirectoryCopy(@sourceDirPath, @desDirPath, true);
+            Thread.Sleep(tM.MillSeconds);
+            DirectoryCopy(@pM.SourceDirPath, @pM.DesDirPath, true);
         }
         void Renamed(object sender, RenamedEventArgs e)
         {
-            //string msg = string.Format("{0} renamed to {1}", e.OldFullPath, e.FullPath);
-            //MakeMessage(e.FullPath, msg, "sourceDir");
-            Thread.Sleep(milliseconds);
-            DirectoryCopy(@sourceDirPath, @desDirPath, true);
+            Thread.Sleep(tM.MillSeconds);
+            DirectoryCopy(@pM.SourceDirPath, @pM.DesDirPath, true);
         }
         /// <summary>
         /// Destination Directory 이벤트 핸들러
         /// </summary>
         void Changed2(object sender, FileSystemEventArgs e)
         {
-            //string msg = string.Format(e.FullPath + " " + e.ChangeType);
-            //MakeMessage(e.FullPath, msg, "destinationDir");
         }
         void Renamed2(object sender, RenamedEventArgs e)
         {
-            //string msg = string.Format("{0} renamed to {1}", e.OldFullPath, e.FullPath);
-            //MakeMessage(e.FullPath, msg, "destinationDir");
         }
 
         /// <summary>
@@ -358,7 +322,7 @@ namespace TestFileinfoInDirectory
         {
             try
             {
-                if (!IsPath())
+                if (!pM.IsPath(textBox1, textBox2))
                     return;
 
                 RealTimeCopyButton.Enabled = false;
@@ -380,9 +344,7 @@ namespace TestFileinfoInDirectory
                 }
                 else
                 {
-                    //watcherSourceDir.EnableRaisingEvents = true;
-                    //watcherDestinationDir.EnableRaisingEvents = true;
-                    DirectoryCopy(sourceDirPath, desDirPath, true);
+                    DirectoryCopy(pM.SourceDirPath, pM.DesDirPath, true);
                 }
             }
             catch (Exception ex)
@@ -437,25 +399,25 @@ namespace TestFileinfoInDirectory
             switch(this.domainUpDown1.Text)
             {
                 case "3 sec":
-                    AutoScanTimer = 1000 * 3;
+                    tM.AutoScanTimer = 1000 * 3;
                     break;
                 case "10 sec":
-                    AutoScanTimer = 1000 * 10;
+                    tM.AutoScanTimer = 1000 * 10;
                     break;
                 case "30 sec":
-                    AutoScanTimer = 1000 * 30;
+                    tM.AutoScanTimer = 1000 * 30;
                     break;
                 case "1 min":
-                    AutoScanTimer = 1000 * 60;
+                    tM.AutoScanTimer = 1000 * 60;
                     break;
                 case "10 min":
-                    AutoScanTimer = 1000 * 60 * 10;
+                    tM.AutoScanTimer = 1000 * 60 * 10;
                     break;
                 case "30 min":
-                    AutoScanTimer = 1000 * 60 * 30;
+                    tM.AutoScanTimer = 1000 * 60 * 30;
                     break;
                 case "1 hour":
-                    AutoScanTimer = 1000 * 60 * 60;
+                    tM.AutoScanTimer = 1000 * 60 * 60;
                     break;
                 default:
                     break;
@@ -478,13 +440,13 @@ namespace TestFileinfoInDirectory
 
         private void AutoBtn_Click(object sender, EventArgs e)
         {
-            if (!IsPath())
+            if (!pM.IsPath(textBox1, textBox2))
                 return;
 
             RealTimeCopyButton.Enabled = false;
             CopyStopButton.Enabled = false;
 
-            timer.Interval = AutoScanTimer;
+            timer.Interval = tM.AutoScanTimer;
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
 
@@ -502,7 +464,7 @@ namespace TestFileinfoInDirectory
             }
             else
             {
-                DirectoryCopy(sourceDirPath, desDirPath, true);
+                DirectoryCopy(pM.SourceDirPath, pM.DesDirPath, true);
             }
         }
 
@@ -519,7 +481,7 @@ namespace TestFileinfoInDirectory
 
         private void justOneCopy(object sender, EventArgs e)
         {
-            if (!IsPath())
+            if (!pM.IsPath(textBox1, textBox2))
                 return;
 
             if (isJustFirst)
@@ -528,9 +490,10 @@ namespace TestFileinfoInDirectory
                 JustWatcherDestinationDir();
                 isJustFirst = false;
             }
-            DirectoryCopy(sourceDirPath, desDirPath, true);
+            DirectoryCopy(pM.SourceDirPath, pM.DesDirPath, true);
         }
     }
+   
 }
 
 

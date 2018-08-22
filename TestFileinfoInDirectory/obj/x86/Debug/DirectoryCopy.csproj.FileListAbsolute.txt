@@ -1,9 +1,9 @@
 C:\TestFileinfoInFolder\TestFileinfoInDirectory\bin\Debug\TestFileinfoInDirectory.exe
 C:\TestFileinfoInFolder\TestFileinfoInDirectory\bin\Debug\TestFileinfoInDirectory.pdb
-C:\TestFileinfoInFolder\TestFileinfoInDirectory\obj\x86\Debug\TestFileinfoInDirectory.Form1.resources
 C:\TestFileinfoInFolder\TestFileinfoInDirectory\obj\x86\Debug\TestFileinfoInDirectory.Properties.Resources.resources
 C:\TestFileinfoInFolder\TestFileinfoInDirectory\obj\x86\Debug\DirectoryCopy.csproj.GenerateResource.cache
 C:\TestFileinfoInFolder\TestFileinfoInDirectory\obj\x86\Debug\DirectoryCopy.csproj.CoreCompileInputs.cache
 C:\TestFileinfoInFolder\TestFileinfoInDirectory\obj\x86\Debug\TestFileinfoInDirectory.exe
 C:\TestFileinfoInFolder\TestFileinfoInDirectory\obj\x86\Debug\TestFileinfoInDirectory.pdb
 C:\TestFileinfoInFolder\TestFileinfoInDirectory\obj\x86\Debug\DirectoryCopy.csprojAssemblyReference.cache
+C:\TestFileinfoInFolder\TestFileinfoInDirectory\obj\x86\Debug\TestFileinfoInDirectory.Form1.resources
